@@ -1,0 +1,7 @@
+aiosqlite==0.21.0
+asyncpg==0.30.0
+greenlet==3.2.4
+python-dotenv==1.1.1
+setuptools==80.9.0
+SQLAlchemy==2.0.43
+typing_extensions==4.14.1
