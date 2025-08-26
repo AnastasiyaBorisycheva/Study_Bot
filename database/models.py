@@ -79,7 +79,7 @@ class Activity(Base):
     user = relationship("User", back_populates="activities")
 
     activity_subtype_id = Column(Integer, ForeignKey('activity_subtypes.id'))
-    activity_subtype = relationship("Activity_Subtype", back_populates="activity_subtype")
+    activity_subtype = relationship("Activity_Subtype", back_populates="activities")
 
     created_at = Column(DateTime, default=datetime.now)
 
