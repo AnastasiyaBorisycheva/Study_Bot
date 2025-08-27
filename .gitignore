@@ -164,3 +164,8 @@ cython_debug/
 .idea/
 .vscode/
 .DS_Store
+
+
+# credentials
+credentials_scheduler.json
+credentials_training.json
