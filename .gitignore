@@ -169,3 +169,6 @@ cython_debug/
 # credentials
 credentials_scheduler.json
 credentials_training.json
+
+#dirty data from GSheet
+unpreparing_stady_data.csv

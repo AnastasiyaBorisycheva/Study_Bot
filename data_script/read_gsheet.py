@@ -28,11 +28,11 @@ def get_specific_range(file_name='new_csv.csv'):
     worksheet = sh.worksheet("List")
     
     # Получить конкретный диапазон
-    range_data = worksheet.get('A1:G500')  # ячейки A1:G500
+    range_data = worksheet.get('A1:H500')  # ячейки A1:G500
     df = pd.DataFrame(range_data[0:], columns=range_data[0])
     # print(df)
     return df.to_csv(file_name+'.csv', index=False, encoding='utf-8')
+
+
     
-
-
 

@@ -1,3 +1,0 @@
-from data_script.read_gsheet import get_specific_range
-
-get_specific_range('unpreparing_stady_data')
