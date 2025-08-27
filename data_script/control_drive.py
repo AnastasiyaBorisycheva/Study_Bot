@@ -38,19 +38,7 @@ def get_list_obj(service):
     return response.execute()
 
 service = auth()
-pprint(get_list_obj(service)) 
-
-
-get_list=get_list_obj(service)
-
-for key_1 in get_list:
-    print(key_1)
-    if key_1 =='files':
-        print(get_list[key_1][0])
-        # for key, value in value_1[0]:
-        #     if key=='id':
-        #         print(value)
-            
+pprint(get_list_obj(service))            
 
 # Удаление файлов с диска сервисного аккаунта
 def clear_disk(service, spreadsheets):
