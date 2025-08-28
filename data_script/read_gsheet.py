@@ -33,6 +33,8 @@ def get_specific_range(file_name='new_csv.csv'):
     # print(df)
     return df.to_csv(file_name+'.csv', index=False, encoding='utf-8')
 
+get_specific_range('new_2')
+
 
     
 
