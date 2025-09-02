@@ -9,8 +9,8 @@ from database.models import Activity
 
 class ActivityCRUD(CRUDBase):
 
-    def __init__(self, model):
+    def __init__(self):
         super().__init__(Activity)
 
 
-activity_type_crud = ActivityCRUD()
+activity_crud = ActivityCRUD()
