@@ -114,7 +114,7 @@ class TestDataLoader:
                 
                 for row in reader:
                     activity = Activity(
-                        user_id=int(row['user_id']),
+                        telegram_id=int(row['telegram_id']),
                         activity_date=datetime.strptime(row['activity_date'], '%Y-%m-%d').date(),
                         duration=int(row['duration']),
                         daypart=row['daypart'],
@@ -232,12 +232,12 @@ class TestDataLoader:
         
         # Пример activities.csv
         activities_data = [
-            ['user_id', 'activity_date', 'duration', 'daypart', 'activity_subtype_id'],
-            ['1', '2024-01-20', '120', 'утро', '1'],
-            ['1', '2024-01-20', '90', 'вечер', '2'],
-            ['2', '2024-01-21', '180', 'день', '3'],
-            ['3', '2024-01-22', '60', 'утро', '4'],
-            ['2', '2024-01-23', '240', 'день', '5']
+            ['telegram_id', 'activity_date', 'duration', 'daypart', 'activity_subtype_id'],
+            ['123456789', '2024-01-20', '120', 'утро', '1'],
+            ['123456789', '2024-01-20', '90', 'вечер', '2'],
+            ['987654321', '2024-01-21', '180', 'день', '3'],
+            ['555555555', '2024-01-22', '60', 'утро', '4'],
+            ['987654321', '2024-01-23', '240', 'день', '5']
         ]
         
         with open(os.path.join(data_dir, 'activities.csv'), 'w', encoding='utf-8', newline='') as f:
@@ -246,6 +246,7 @@ class TestDataLoader:
         print(f"✓ Создан activities.csv")
         
         print(f"✅ Примеры CSV файлов созданы в папке {data_dir}")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -265,7 +266,7 @@ def main():
                        help='Директория с CSV файлами (по умолчанию: test_data)')
     parser.add_argument('--generate', action='store_true',
                        help='Сгенерировать примеры CSV файлов')
-    
+
     args = parser.parse_args()
     
     loader = TestDataLoader(args.db)
