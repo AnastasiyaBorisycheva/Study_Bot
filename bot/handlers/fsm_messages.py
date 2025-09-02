@@ -1,20 +1,18 @@
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
-from aiogram import Router, html, F
-from aiogram.filters import CommandStart
+from aiogram import Router, F
+
 from aiogram.types import Message, CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
 
-from datetime import datetime, date
+from datetime import datetime
 
-from bot.keyboards import test_keyboard, activity_types_keyboard, type_of_date_button_keyboard, activity_subtypes_keyboard
+from bot.keyboards import activity_types_keyboard, type_of_date_button_keyboard, activity_subtypes_keyboard
 
 from crud.activities import activity_crud
 from crud.activity_types import activity_type_crud
 from crud.activity_subtypes import activity_subtype_crud
-from crud.user import crud_user
 
 
 class ActivityState(StatesGroup):
@@ -27,35 +25,6 @@ class ActivityState(StatesGroup):
 
 
 router = Router()
-
-
-@router.message(CommandStart())
-async def command_start_handler(
-        message: Message,
-        session: AsyncSession, 
-        state: FSMContext) -> None:
-    """
-    This handler receives messages with `/start` command
-    """
-
-    user_id = message.from_user.id
-
-    await state.clear()
-
-    user_info = await crud_user.get_by_telegram_id(user_id, session)
-
-    if not user_info:
-        data = {}
-        data['telegram_id'] = user_id
-        data['first_name'] = message.from_user.first_name
-        data['last_name'] = message.from_user.last_name
-        data['username'] = message.from_user.username
-        data['is_premium'] = message.from_user.is_premium
-
-        await crud_user.create(session, data=data)
-        await message.answer(f"User {message.from_user.username} has been registrated")
-    else:
-        await message.answer(f"Hello, {message.from_user.username}!")
 
 
 @router.message(F.text == '/add')
@@ -119,7 +88,7 @@ async def process_daypart(message: Message, state: FSMContext, session: AsyncSes
 
 @router.message(ActivityState.waiting_activity_type)
 async def process_activity_type(message: Message, state: FSMContext, session: AsyncSession):
-    
+
     activity_type_name = message.text
 
     activity_type = await activity_type_crud.get_by_attribute(
@@ -149,7 +118,7 @@ async def process_activity_add(callback: CallbackQuery, state: FSMContext, sessi
     await activity_crud.create(session, data)
 
     await callback.answer("Данные добавлены")
-    await callback.message.answer("Данные добавлены")
+    await callback.message.edit_text("Данные добавлены")
 
     await state.clear()
 

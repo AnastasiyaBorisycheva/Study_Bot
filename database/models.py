@@ -16,6 +16,7 @@ class User(Base):
     username = Column(String(100), nullable=True)
     is_premium = Column(Boolean,)
     registration_date = Column(DateTime, default=datetime.now)
+    is_admin = Column(Boolean, default=False)
 
     activities = relationship("Activity", back_populates="user")
 
@@ -50,7 +51,7 @@ class Activity_Subtype(Base):
     __tablename__ = "activity_subtypes"
 
     id = Column(Integer, primary_key=True)
-    activity_subtype_name = Column(String(50), unique=True)
+    activity_subtype_name = Column(String(50))
     norm_time = Column(Integer, default=40, nullable=True)
 
     activity_type_id = Column(Integer, ForeignKey('activity_types.id'))
