@@ -71,7 +71,7 @@ class Activity(Base):
     __tablename__ = "activities"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    telegram_id = Column(Integer, ForeignKey("users.telegram_id"))
     activity_date = Column(Date)
     duration = Column(Integer, default=60)
     daypart = Column(String(50))

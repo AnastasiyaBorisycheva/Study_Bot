@@ -7,17 +7,33 @@ from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
 from database.init_db import create_tables
+from bot.commands import commands, set_common_commands, set_admin_commands
+
+from bot.fsm_messages import router as start_router
+from bot.middlewares import DbSessionMiddleware
 
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
 
+async def on_startup(bot: Bot):
+    await set_admin_commands(bot)
+    await set_common_commands(bot)
+    print("Команды настроены!")
+
+
 async def main() -> None:
     dp = Dispatcher()
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
+    dp.update.outer_middleware(DbSessionMiddleware())
+
     await create_tables()
+    dp.startup.register(on_startup)
+
+    dp.include_router(router=start_router)
+
     await dp.start_polling(bot)
 
 
