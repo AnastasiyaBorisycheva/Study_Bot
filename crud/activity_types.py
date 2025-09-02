@@ -9,7 +9,7 @@ from database.models import Activity_Type
 
 class ActivityTypeCRUD(CRUDBase):
 
-    def __init__(self, model):
+    def __init__(self):
         super().__init__(Activity_Type)
 
 
