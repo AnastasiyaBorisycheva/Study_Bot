@@ -1,0 +1,17 @@
+volumes:
+  pg_data:
+
+services:
+  study_bot:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    env_file: .env
+    ports:
+      - 5434:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped

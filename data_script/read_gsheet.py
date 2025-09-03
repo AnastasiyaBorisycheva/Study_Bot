@@ -13,6 +13,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
           'https://www.googleapis.com/auth/drive.readonly']
 SPREADSHEET_URL = os.getenv('SPREADSHEET_URL')   # ваш URL
 
+
 def get_google_sheet_data():
     # Создаем credentials
     credentials = service_account.Credentials.from_service_account_file(
@@ -20,7 +21,8 @@ def get_google_sheet_data():
     
     # Извлекаем ID таблицы из URL
     spreadsheet_id = SPREADSHEET_URL.split('/d/')[1].split('/')[0]
-    
+
+
 def get_specific_range(file_name='new_csv.csv'):
     """Получение конкретного диапазона данных"""
     gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
@@ -32,8 +34,6 @@ def get_specific_range(file_name='new_csv.csv'):
     df = pd.DataFrame(range_data[0:], columns=range_data[0])
     # print(df)
     return df.to_csv('data_script/'+file_name+'.csv', index=False, encoding='utf-8')
+
+
 get_specific_range('unpreparing_stady_data')
-
-
-    
-
