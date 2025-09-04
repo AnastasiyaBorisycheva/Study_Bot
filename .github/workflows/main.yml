@@ -26,6 +26,6 @@ jobs:
         # Одновременный билд и пуш образа в Docker Hub
         uses: docker/build-push-action@v4
         with:
-          context: ./
+          context: .
           push: true
           tags: anastasiiaborisycheva/study_bot:latest 
