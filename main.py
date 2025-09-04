@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 from database.init_db import create_tables
 from bot.commands import commands, set_common_commands, set_admin_commands
 
-from bot.fsm_messages import router as start_router
+from bot.handlers.fsm_messages import router as add_router
+from bot.handlers.start_handler import router as start_router
 from bot.middlewares import DbSessionMiddleware
 
 load_dotenv()
@@ -32,6 +33,7 @@ async def main() -> None:
     await create_tables()
     dp.startup.register(on_startup)
 
+    dp.include_router(router=add_router)
     dp.include_router(router=start_router)
 
     await dp.start_polling(bot)
