@@ -32,6 +32,7 @@ def get_specific_range(file_name='new_csv.csv'):
     df = pd.DataFrame(range_data[0:], columns=range_data[0])
     # print(df)
     return df.to_csv('data_script/'+file_name+'.csv', index=False, encoding='utf-8')
+
 get_specific_range('unpreparing_stady_data')
 
 
