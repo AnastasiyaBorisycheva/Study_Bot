@@ -6,3 +6,20 @@ __pycache__/
 .Python
 db.sqlite3
 .git/
+
+# data files
+unpreparing_stady_data.csv
+prep_activities.csv
+activity_subtypes.csv
+activity_types.csv
+activities.csv
+users.csv
+users.csv
+
+
+# databases
+*.db
+
+# secrets
+.env
+credentials_scheduler.json
