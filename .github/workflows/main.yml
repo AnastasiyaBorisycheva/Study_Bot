@@ -29,3 +29,33 @@ jobs:
           context: .
           push: true
           tags: anastasiiaborisycheva/study_bot:latest 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push_to_docker_hub
+    steps:
+      - name: 🛎 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.SSH_USER }}/tracker_bot/
+            
+            # Pull latest images
+            docker compose pull
+            
+            # Redeploy containers
+            docker compose up -d --force-recreate
+            
+            # Cleanup old images
+            docker image prune -f
+            
+            # Check status
+            docker compose ps
+            
+            echo "✅ Deployment completed successfully!"
