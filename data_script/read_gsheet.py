@@ -30,10 +30,32 @@ def get_specific_range(file_name='new_csv.csv'):
     worksheet = sh.worksheet("List")
     
     # Получить конкретный диапазон
-    range_data = worksheet.get('A1:H500')  # ячейки A1:G500
+    range_data = worksheet.get('A1:H500')  # ячейки A1:H500
     df = pd.DataFrame(range_data[0:], columns=range_data[0])
-    # print(df)
     return df.to_csv('data_script/'+file_name+'.csv', index=False, encoding='utf-8')
 
+def get_activity_subtypes(file_name='activity_subtypes'):
+    """Получение конкретного диапазона данных"""
+    gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
+    sh = gc.open_by_url(SPREADSHEET_URL)
+    worksheet = sh.worksheet("activity_subtypes")
+    
+    # Получить конкретный диапазон
+    range_data = worksheet.get('A1:C500')  # ячейки A1:C500
+    df = pd.DataFrame(range_data[0:], columns=range_data[0])
+    return df.to_csv('data_script/'+file_name+'.csv', index=False, header=False, encoding='utf-8')
+
+def get_activity_types(file_name='activity_types'):
+    """Получение конкретного диапазона данных"""
+    gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
+    sh = gc.open_by_url(SPREADSHEET_URL)
+    worksheet = sh.worksheet("activity_subtypes")
+    
+    # Получить конкретный диапазон
+    range_data = worksheet.get('G1:G500')  # ячейки G1:G500
+    df = pd.DataFrame(range_data[0:], columns=range_data[0])
+    return df.to_csv('data_script/'+file_name+'.csv', index=False, header=False, encoding='utf-8',)
 
 get_specific_range('unpreparing_stady_data')
+get_activity_subtypes()
+get_activity_types()
