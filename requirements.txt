@@ -1,5 +1,6 @@
 aiogram==3.22.0
 aiogram_calendar==0.6.0
+asyncpg==0.30.0
 google-api-python-client==2.179.0
 gspread==6.2.1
 matplotlib==3.10.6
@@ -7,3 +8,4 @@ pandas==2.3.2
 python-dotenv==1.1.1
 seaborn==0.13.2
 SQLAlchemy==2.0.43
+psycopg2
