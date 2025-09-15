@@ -7,14 +7,6 @@ from crud.activity_subtypes import activity_subtype_crud
 from crud.activity_types import activity_type_crud
 
 
-# Клавиатура для выбора пола
-def gender_keyboard():
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="👨 Мужской", callback_data="gender_m")],
-        [InlineKeyboardButton(text="👩 Женский", callback_data="gender_f")]
-    ])
-
-
 # Клавиатура для подтверждения
 def confirm_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
@@ -23,64 +15,44 @@ def confirm_keyboard():
     ])
 
 
+def duration_keyboard():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text='30'), KeyboardButton(text='60')],
+            [KeyboardButton(text='90'), KeyboardButton(text='120')],
+            [KeyboardButton(text='180'), KeyboardButton(text='210')],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+
 def type_of_date_inline_keyboard():
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Утро", callback_data="morning")],
-            [InlineKeyboardButton(text="День", callback_data="day")],
-            [InlineKeyboardButton(text="Вечер", callback_data="evening")],
-            [InlineKeyboardButton(text="Ночь", callback_data="night")],
-            [InlineKeyboardButton(text="Весь день", callback_data="all_day")]
+            [InlineKeyboardButton(text="Утро", callback_data="daypart:morning")],
+            [InlineKeyboardButton(text="День", callback_data="daypart:day")],
+            [InlineKeyboardButton(text="Вечер", callback_data="daypart:evening")],
+            [InlineKeyboardButton(text="Ночь", callback_data="daypart:night")],
+            [InlineKeyboardButton(text="Весь день", callback_data="daypart:all_day")]
         ]
-    )
-
-
-def type_of_date_button_keyboard():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="Утро")],
-            [KeyboardButton(text="День")],
-            [KeyboardButton(text="Вечер")],
-            [KeyboardButton(text="Ночь")],
-            [KeyboardButton(text="Весь день")],
-        ],
-        resize_keyboard=True,
-        one_time_keyboard=True,
-    )
-
-
-def test_keyboard():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text='First_button', )],
-            [KeyboardButton(text='Second_button'), KeyboardButton(text='Third_button')],
-
-        ],
-        is_persistent=False,
-        resize_keyboard=True,
-        one_time_keyboard=True,
-        input_field_placeholder='test_button',
-        selective=True
     )
 
 
 async def activity_types_keyboard(session: AsyncSession):
     activity_types = await activity_type_crud.get_all(session=session)
 
-    buttons = []
+    builder = InlineKeyboardBuilder()
 
     for activity_type in activity_types:
-        buttons.append(KeyboardButton(text=activity_type.activity_type_name))
+        builder.button(
+            text=activity_type.activity_type_name,
+            callback_data=f'activity_type:{activity_type.id}'
+        )
 
-    keyboard_markup = ReplyKeyboardMarkup(
-        keyboard=[
-            buttons
-        ],
-        resize_keyboard=True,
-        one_time_keyboard=True
-    )
+    builder.adjust(2)
 
-    return keyboard_markup
+    return builder.as_markup()
 
 
 async def activity_subtypes_keyboard(session: AsyncSession, activity_type_id: int):
