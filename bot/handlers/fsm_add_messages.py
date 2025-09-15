@@ -12,7 +12,7 @@ from crud.activities import activity_crud
 from crud.activity_subtypes import activity_subtype_crud
 from crud.activity_types import activity_type_crud
 
-from aiogram_calendar import SimpleCalendar, SimpleCalendarCallback, get_user_locale
+from aiogram_calendar import SimpleCalendar, SimpleCalendarCallback
 
 
 class ActivityState(StatesGroup):
@@ -31,7 +31,7 @@ async def StartAddActivity(message: Message, state: FSMContext):
 
     await message.answer(
         "Введите дату в формате дд.мм.гггг",
-        reply_markup=await SimpleCalendar(locale='ru_RU').start_calendar()
+        reply_markup=await SimpleCalendar().start_calendar()
     )
 
     await state.set_state(ActivityState.waiting_date)
