@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from database.init_db import create_tables
 from bot.commands import commands, set_common_commands, set_admin_commands
 
-from bot.handlers.fsm_messages import router as add_router
+from bot.handlers.fsm_add_messages import router as add_router
 from bot.handlers.start_handler import router as start_router
 from bot.middlewares import DbSessionMiddleware
 
