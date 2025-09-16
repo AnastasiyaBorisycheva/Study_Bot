@@ -6,12 +6,12 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
-from database.init_db import create_tables
-from bot.commands import commands, set_common_commands, set_admin_commands
-
+from bot.commands import set_admin_commands, set_common_commands
 from bot.handlers.fsm_add_messages import router as add_router
+from bot.handlers.list_handler import router as list_router
 from bot.handlers.start_handler import router as start_router
 from bot.middlewares import DbSessionMiddleware
+from database.init_db import create_tables
 
 load_dotenv()
 
@@ -26,15 +26,19 @@ async def on_startup(bot: Bot):
 
 async def main() -> None:
     dp = Dispatcher()
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(
+        token=TOKEN,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
 
     dp.update.outer_middleware(DbSessionMiddleware())
 
     await create_tables()
     dp.startup.register(on_startup)
 
-    dp.include_router(router=add_router)
     dp.include_router(router=start_router)
+    dp.include_router(router=add_router)
+    dp.include_router(router=list_router)
 
     await dp.start_polling(bot)
 

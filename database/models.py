@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, DateTime, ForeignKey, Date
-from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime
 
+from sqlalchemy import (BigInteger, Boolean, Column, Date, DateTime,
+                        ForeignKey, Integer, String)
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
@@ -10,7 +11,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    telegram_id = Column(BigInteger, unique=True)  # BigInteger для больших ID Telegram
+    telegram_id = Column(BigInteger, unique=True)
     first_name = Column(String(50), nullable=True)
     last_name = Column(String(50), nullable=True)
     username = Column(String(100), nullable=True)
@@ -21,10 +22,16 @@ class User(Base):
     activities = relationship("Activity", back_populates="user")
 
     def __str__(self):
-        return f'Пользователь {self.username}, id={self.id}, tg_id={self.telegram_id}'
+        return (
+            f'Пользователь {self.username}, '
+            f'id={self.id}, tg_id={self.telegram_id}'
+        )
 
     def __repr__(self):
-        return f'Пользователь {self.username}, id={self.id}, tg_id={self.telegram_id}'
+        return (
+            f'Пользователь {self.username}, '
+            f'id={self.id}, tg_id={self.telegram_id}'
+        )
 
 
 class Activity_Type(Base):
@@ -36,7 +43,10 @@ class Activity_Type(Base):
     id = Column(Integer, primary_key=True)
     activity_type_name = Column(String(50), unique=True)
 
-    activity_subtypes = relationship("Activity_Subtype", back_populates="activity_type")
+    activity_subtypes = relationship(
+        "Activity_Subtype",
+        back_populates="activity_type"
+    )
 
     def __str__(self):
         return f'{self.id}: вид активности - {self.activity_type_name}'
@@ -55,9 +65,15 @@ class Activity_Subtype(Base):
     norm_time = Column(Integer, default=40, nullable=True)
 
     activity_type_id = Column(Integer, ForeignKey('activity_types.id'))
-    activity_type = relationship("Activity_Type", back_populates="activity_subtypes")
+    activity_type = relationship(
+        "Activity_Type",
+        back_populates="activity_subtypes"
+    )
 
-    activities = relationship("Activity", back_populates="activity_subtype")
+    activities = relationship(
+        "Activity",
+        back_populates="activity_subtype"
+    )
 
     def __str__(self):
         return f'{self.id}: тип активности - {self.activity_subtype_name}'
@@ -80,12 +96,30 @@ class Activity(Base):
     user = relationship("User", back_populates="activities")
 
     activity_subtype_id = Column(Integer, ForeignKey('activity_subtypes.id'))
-    activity_subtype = relationship("Activity_Subtype", back_populates="activities")
+    activity_subtype = relationship(
+        "Activity_Subtype",
+        back_populates="activities"
+    )
 
     created_at = Column(DateTime, default=datetime.now)
 
     def __str__(self):
-        return f'Активность пользователя {self.user.username} номер {self.id} в {self.activity_date}'
+        # Проверяем, загружен ли связанный объект
+        if not self.activity_subtype:
+            return (
+                f"Активность #{self.id}: [подтип не загружен] "
+                f"({self.duration} мин, {self.activity_date})"
+            )
+
+        return (
+            f"{self.activity_date}: "
+            f"{self.activity_subtype.activity_type.activity_type_name} - "
+            f"{self.activity_subtype.activity_subtype_name}, "
+            f"{self.duration} мин."
+        )
 
     def __repr__(self):
-        return f'Активность пользователя {self.user.username} номер {self.id} в {self.activity_date}'
+        return (
+            f'Активность пользователя {self.user.username} '
+            f'номер {self.id} в {self.activity_date}'
+        )

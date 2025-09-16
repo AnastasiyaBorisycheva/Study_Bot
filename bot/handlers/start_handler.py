@@ -9,11 +9,10 @@ from crud.user import crud_user
 router = Router()
 
 
-
 @router.message(CommandStart())
 async def command_start_handler(
         message: Message,
-        session: AsyncSession, 
+        session: AsyncSession,
         state: FSMContext) -> None:
     """
     This handler receives messages with `/start` command
@@ -35,7 +34,7 @@ async def command_start_handler(
 
         await crud_user.create(session, data=data)
         await message.answer(
-            f"User {message.from_user.username} has been registrated"
+            f"User {message.from_user.username} has been registrated!"
         )
     else:
         await message.answer(
