@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import (BigInteger, Boolean, Column, Date, DateTime,
                         ForeignKey, Integer, String)
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -67,7 +68,8 @@ class Activity_Subtype(Base):
     activity_type_id = Column(Integer, ForeignKey('activity_types.id'))
     activity_type = relationship(
         "Activity_Type",
-        back_populates="activity_subtypes"
+        back_populates="activity_subtypes",
+        lazy='joined'
     )
 
     activities = relationship(
@@ -98,10 +100,23 @@ class Activity(Base):
     activity_subtype_id = Column(Integer, ForeignKey('activity_subtypes.id'))
     activity_subtype = relationship(
         "Activity_Subtype",
-        back_populates="activities"
+        back_populates="activities",
+        lazy='joined'
     )
 
     created_at = Column(DateTime, default=datetime.now)
+
+    @hybrid_property
+    def formatted_date(self):
+        if self.activity_date:
+            return self.activity_date.strftime("%d.%m.%Y")
+        return None
+
+    @formatted_date.expression
+    def formatted_date(cls):
+        # Для SQL запросов (PostgreSQL)
+        from sqlalchemy import func
+        return func.to_char(cls.activity_date, 'DD.MM.YYYY')
 
     def __str__(self):
         # Проверяем, загружен ли связанный объект
@@ -112,7 +127,7 @@ class Activity(Base):
             )
 
         return (
-            f"{self.activity_date}: "
+            f"{self.formatted_date}: "
             f"{self.activity_subtype.activity_type.activity_type_name} - "
             f"{self.activity_subtype.activity_subtype_name}, "
             f"{self.duration} мин."
@@ -121,5 +136,5 @@ class Activity(Base):
     def __repr__(self):
         return (
             f'Активность пользователя {self.user.username} '
-            f'номер {self.id} в {self.activity_date}'
+            f'номер {self.id} в {self.formatted_date}'
         )
