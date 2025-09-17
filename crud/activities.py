@@ -1,9 +1,8 @@
-from sqlalchemy import select
+from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from crud.base import CRUDBase
-from database.models import Activity, Activity_Subtype
+from database.models import Activity
 
 
 class ActivityCRUD(CRUDBase):
@@ -15,18 +14,12 @@ class ActivityCRUD(CRUDBase):
             self,
             telegram_id: int,
             session: AsyncSession,
-            skip: int = 0,
-            limit: int = 10
     ):
         activities_list = await session.execute(
             select(Activity).where(
                 Activity.telegram_id == telegram_id
-            ).options(
-                selectinload(Activity.activity_subtype)
-                .selectinload(Activity_Subtype.activity_type)
             ).order_by(
-                Activity.activity_date
-            ).offset(skip).limit(limit)
+                desc(Activity.activity_date))
         )
         return activities_list.scalars().all()
 

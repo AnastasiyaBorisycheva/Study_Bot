@@ -1,5 +1,6 @@
 aiogram==3.22.0
 aiogram_calendar==0.6.0
+aiogram-widgets==1.2.7
 asyncpg==0.30.0
 google-api-python-client==2.179.0
 gspread==6.2.1
