@@ -7,6 +7,7 @@ from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
 from bot.commands import set_admin_commands, set_common_commands
+from bot.handlers.delete_activity_handler import router as delete_router
 from bot.handlers.fsm_add_messages import router as add_router
 from bot.handlers.list_handler import router as list_router
 from bot.handlers.start_handler import router as start_router
@@ -39,6 +40,7 @@ async def main() -> None:
     dp.include_router(router=start_router)
     dp.include_router(router=add_router)
     dp.include_router(router=list_router)
+    dp.include_router(router=delete_router)
 
     await dp.start_polling(bot)
 
