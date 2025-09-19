@@ -18,6 +18,27 @@ def confirm_keyboard():
     ])
 
 
+def delete_or_edit_keyboard(
+    activity_id: int
+):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="Редактировать",
+                callback_data=f"edit_activity:{activity_id}"
+            ),
+            InlineKeyboardButton(
+                text="Удалить",
+                callback_data=f"delete_activity:{activity_id}"
+            ),
+        ]
+    ]
+
+    return InlineKeyboardMarkup(
+        inline_keyboard=keyboard
+    )
+
+
 def duration_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
@@ -84,6 +105,7 @@ async def activity_subtypes_keyboard(
 async def get_activities_list_keyboard(
         session: AsyncSession,
         telegram_id: int,
+        callback_text: str,
         router: Router
 ):
 
@@ -102,7 +124,7 @@ async def get_activities_list_keyboard(
                 f"{activity.activity_subtype.activity_subtype_name}, "
                 f"{activity.duration} мин."
             ),
-            callback_data=f'users_activity:{activity.id}'
+            callback_data=f'{callback_text}:{activity.id}'
         )
 
         buttons.append(button)
