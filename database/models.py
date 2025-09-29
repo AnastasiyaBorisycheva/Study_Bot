@@ -95,7 +95,7 @@ class Activity(Base):
     duration = Column(Integer, default=60)
     daypart = Column(String(50))
 
-    user = relationship("User", back_populates="activities")
+    user = relationship("User", back_populates="activities", lazy='joined')
 
     activity_subtype_id = Column(Integer, ForeignKey('activity_subtypes.id'))
     activity_subtype = relationship(
