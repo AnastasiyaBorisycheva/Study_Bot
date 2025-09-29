@@ -31,7 +31,13 @@ def delete_or_edit_keyboard(
                 text="Удалить",
                 callback_data=f"delete_activity:{activity_id}"
             ),
-        ]
+        ],
+        [
+            InlineKeyboardButton(
+                text='Отмена',
+                callback_data='/cancel'
+            ),
+        ],
     ]
 
     return InlineKeyboardMarkup(
@@ -137,3 +143,41 @@ async def get_activities_list_keyboard(
     )
 
     return paginator.as_markup()
+
+
+def show_activity_parameters_keyboard():
+
+    builder = InlineKeyboardBuilder()
+
+    edit_params_dict = {
+        'дата активности': 'activity_date',
+        'продолжительность': 'duration',
+        'часть дня': 'daypart',
+        'тип активности': 'activity_type',
+    }
+
+    for name, param in edit_params_dict.items():
+        builder.button(
+                text=f'{name}',
+                callback_data=f'edit_param:{param}'
+            )
+
+    builder.button(
+        text='отмена',
+        callback_data='/cancel'
+    )
+
+    builder.adjust(1)
+
+    return builder.as_markup()
+
+
+def edit_confirmation_inline_keyboard():
+
+    inline_keyboard = [
+        [InlineKeyboardButton(text='Редактировать другой параметр', callback_data='edit:continue')],
+        [InlineKeyboardButton(text='Сохранить изменения', callback_data='edit:save')],
+        [InlineKeyboardButton(text='Отменить редактирование', callback_data='/cancel')]
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)

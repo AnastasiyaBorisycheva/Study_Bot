@@ -4,7 +4,7 @@ from aiogram import Bot
 
 commands = [
     BotCommand(command="start", description="Запуск бота"),
-    BotCommand(command="list", description="Показать последние 10 записей Активности"),
+    BotCommand(command="list", description="Показать последние 10 записей"),
     BotCommand(command="add", description="Добавить новую запись в Активность"),
     BotCommand(command="edit", description="Внести изменения в существующую запись"),
     BotCommand(command="delete", description="Удалить существующую запись об Активности"),

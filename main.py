@@ -11,6 +11,9 @@ from bot.handlers.delete_activity_handler import router as delete_router
 from bot.handlers.fsm_add_messages import router as add_router
 from bot.handlers.list_handler import router as list_router
 from bot.handlers.start_handler import router as start_router
+from bot.handlers.edit_activity_handler import router as edit_router
+from bot.handlers.help_handler import router as help_router
+from bot.handlers.cancel_handler import router as cancel_router
 from bot.middlewares import DbSessionMiddleware
 from database.init_db import create_tables
 
@@ -37,10 +40,13 @@ async def main() -> None:
     await create_tables()
     dp.startup.register(on_startup)
 
+    dp.include_router(help_router)
+    dp.include_router(cancel_router)
     dp.include_router(router=start_router)
     dp.include_router(router=add_router)
     dp.include_router(router=list_router)
     dp.include_router(router=delete_router)
+    dp.include_router(router=edit_router)
 
     await dp.start_polling(bot)
 

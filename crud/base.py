@@ -15,10 +15,10 @@ class CRUDBase:
         return result.scalar_one_or_none()
 
     async def get_all(
-            self,
-            session: AsyncSession,
-            skip: int = 0,
-            limit: int = 10,
+        self,
+        session: AsyncSession,
+        skip: int = 0,
+        limit: int = 10,
     ):
         """Получить все объекты с пагинацией."""
         result = await session.execute(
@@ -34,15 +34,30 @@ class CRUDBase:
         await session.refresh(obj)
         return obj
 
-    async def update(self, session: AsyncSession, id: int, data: Dict[str, Any]):
+    async def update(
+        self, session: AsyncSession,
+        id: int,
+        data: Dict[str, Any]
+    ):
         """Обновить объект."""
+
+        # Фильтруем данные, проверяя существование атрибута
+        filtered_data = {
+            key: value for key, value in data.items()
+            if hasattr(self.model, key)
+        }
+
+        if not filtered_data:
+            return await self.get(id, session=session)
+
         await session.execute(
             update(self.model)
             .where(self.model.id == id)
-            .values(**data)
+            .values(**filtered_data)
         )
         await session.commit()
-        return await self.get(id)
+        await session.reset()
+        return await self.get(id, session=session)
 
     async def delete(self, session: AsyncSession, id: int) -> bool:
         """Удалить объект."""
@@ -52,10 +67,10 @@ class CRUDBase:
         return True
 
     async def get_by_attribute(
-            self,
-            attr_name: str,
-            attr_value: str,
-            session: AsyncSession,
+        self,
+        attr_name: str,
+        attr_value: str,
+        session: AsyncSession,
     ):
         """Получить объект по значению атрибута."""
         attr = getattr(self.model, attr_name)

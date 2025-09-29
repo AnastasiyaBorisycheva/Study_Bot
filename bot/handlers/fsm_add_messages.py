@@ -24,12 +24,6 @@ class ActivityState(StatesGroup):
 router = Router()
 
 
-@router.message(F.text == '/cancel')
-async def cansel_survey(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer("Диалог отменен")
-
-
 @router.message(F.text == '/add')
 async def StartAddActivity(message: Message, state: FSMContext):
 
