@@ -100,8 +100,8 @@ async def choose_edit_param(
     if parameter == 'activity_date':
         calendar = SimpleCalendar(show_alerts=True)
 
-        msg_year = message.date.year
-        msg_month = message.date.month
+        msg_year = callback.message.date.year
+        msg_month = callback.message.date.month
 
         calendar.set_dates_range(
                 min_date=(datetime.now() - timedelta(days=90)),
@@ -170,13 +170,7 @@ async def edit_activity_date(
     callback: CallbackQuery,
     state: FSMContext,
     callback_data: SimpleCalendarCallback,
-    session: AsyncSession
 ):
-
-    print("Попали в обработчик даты!")  # ← отладка
-    current_state = await state.get_state()
-    print(f"Состояние в обработчике: {current_state}")
-
     calendar = SimpleCalendar(show_alerts=True)
     calendar.set_dates_range(
             min_date=(datetime.now() - timedelta(days=90)),
@@ -309,7 +303,6 @@ async def edit_activity_subtype(
     )
 
     await state.update_data(activity_subtype_id=int(activity_subtype_id))
-    # await state.update_data(activity_subtype=activity_subtype_obj)
     await state.set_state(EditState.waiting_confirmation)
 
     await callback.message.edit_text(
