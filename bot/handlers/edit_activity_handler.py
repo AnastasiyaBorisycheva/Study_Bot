@@ -100,6 +100,9 @@ async def choose_edit_param(
     if parameter == 'activity_date':
         calendar = SimpleCalendar(show_alerts=True)
 
+        msg_year = message.date.year
+        msg_month = message.date.month
+
         calendar.set_dates_range(
                 min_date=(datetime.now() - timedelta(days=90)),
                 max_date=datetime.now()
@@ -110,7 +113,10 @@ async def choose_edit_param(
                 f'Текущая дата: {activity.formatted_date}\n'
                 f'Выберите новую дату'
             ),
-            reply_markup=await calendar.start_calendar()
+            reply_markup=await calendar.start_calendar(
+                year=msg_year,
+                month=msg_month
+            )
         )
 
     elif parameter == 'duration':

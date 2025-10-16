@@ -29,6 +29,9 @@ async def StartAddActivity(message: Message, state: FSMContext):
 
     calendar = SimpleCalendar(show_alerts=True)
 
+    msg_year = message.date.year
+    msg_month = message.date.month
+
     calendar.set_dates_range(
             min_date=(datetime.now() - timedelta(days=90)),
             max_date=datetime.now()
@@ -36,7 +39,10 @@ async def StartAddActivity(message: Message, state: FSMContext):
 
     await message.answer(
         "Выберите дату для записи",
-        reply_markup=await calendar.start_calendar()
+        reply_markup=await calendar.start_calendar(
+            year=msg_year,
+            month=msg_month
+        )
     )
 
     await state.set_state(ActivityState.waiting_date)
@@ -178,7 +184,7 @@ async def process_activity_add(
 
     await state.update_data(activity_subtype=activity_subtype_obj)
     data = await state.get_data()
-    print(data)
+
     await activity_crud.create(session, data)
 
     await callback.message.edit_text("Данные добавлены", reply_markup=None)
