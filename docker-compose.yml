@@ -1,24 +1,35 @@
 volumes:
-  pg_data:
+  pg_data_tracker_bot:
 
 services:
-  study_bot:
-    build: .
-    env_file: .env
-    restart: unless-stopped
-
-  db:
+  db_tracker_bot:
     image: postgres:15
-    env_file: .env
-    ports:
-      - 5434:5432
+    container_name: pg_tracker_bot
+    env_file:
+      - .env
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data_tracker_bot:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5434:5432"
     restart: unless-stopped
+    networks:
+      -  trackerbotnetwork
 
+  bot:
+    image: anastasiiaborisycheva/study_bot:latest
+    container_name: trackerbot
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - db_tracker_bot
+    networks:
+      -  trackerbotnetwork
+    environment:
+      DATABASE_HOST: db_tracker_bot  # ← внутреннее имя контейнера
+      DATABASE_PORT: 5432
 
 networks:
-  default:
+  trackerbotnetwork:
+    name: tracker_bot_network
     driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: 1450
